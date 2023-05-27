@@ -1,9 +1,16 @@
 'use client'
-import {Box} from '@chakra-ui/react'
+import { Box, Container } from '@chakra-ui/react'
+import {useForm} from 'react-hook-form'
+import { Form } from '../components/Form'
 
 
 export default function Home() {
+
+
   return (
-    <Box>Hello World</Box>
+    <Container>
+      <Form />
+    </Container>
+
   )
 }
