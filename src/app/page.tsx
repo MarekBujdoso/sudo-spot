@@ -1,16 +1,18 @@
 'use client'
-import { Box, Container } from '@chakra-ui/react'
-import {useForm} from 'react-hook-form'
+import { Box } from '@chakra-ui/react'
 import { Form } from '../components/Form'
-
+import { ScriptEditor } from '@/components/ScriptEditor'
+import { useState } from 'react'
 
 export default function Home() {
-
-
+  const [isEditor, setIsEditor] = useState(false)
   return (
-    <Container>
-      <Form />
-    </Container>
-
+    <Box>
+      {isEditor ? (
+        <ScriptEditor onGoBack={() => setIsEditor(false)} />
+      ) : (
+        <Form onSubmitForm={() => setIsEditor(true)} />
+      )}
+    </Box>
   )
 }
