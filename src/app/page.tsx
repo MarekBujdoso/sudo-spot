@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <Box>
       {isEditor ? (
-        <ScriptEditor />
+        <ScriptEditor onGoBack={() => setIsEditor(false)} />
       ) : (
         <Form onSubmitForm={() => setIsEditor(true)} />
       )}

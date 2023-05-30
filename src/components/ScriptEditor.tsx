@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { Flex, Box, Text, Tag, Image } from '@chakra-ui/react'
 import { BsPlayCircle } from 'react-icons/bs'
 import { IoIosArrowBack } from 'react-icons/io'
+import { BiPencil } from 'react-icons/bi'
+import { ScriptParagraphPopover } from './ScriptParagraphPopover'
+import { BASE_GREY, BASE_DARK_GREY, ORANGE } from '@/constants'
 
 const SCENES = {
   scenes: [
@@ -78,11 +81,11 @@ const SCENES = {
   },
 }
 
-const ORANGE = '#DC7746'
-const BASE_DARK_GREY = '#191C25'
-const BASE_GREY = '#192533'
+type Props = {
+  onGoBack: () => void
+}
 
-export const ScriptEditor = () => {
+export const ScriptEditor = ({ onGoBack }: Props) => {
   const [activeSceneIndex, setActiveSceneIndex] = useState<number | undefined>()
   return (
     <Box backgroundColor={BASE_GREY} width={'100%'}>
@@ -91,6 +94,7 @@ export const ScriptEditor = () => {
         height="80px"
         px="6"
         backgroundColor={BASE_DARK_GREY}
+        onClick={onGoBack}
       >
         <IoIosArrowBack cursor={'pointer'} />
         <Text ml="2" fontSize={'xl'} fontWeight={800}>
@@ -126,6 +130,7 @@ export const ScriptEditor = () => {
               pl="4"
               key={item.location}
               onClick={() => setActiveSceneIndex(index)}
+              position={'relative'}
             >
               <Flex>
                 <Box>
@@ -141,6 +146,13 @@ export const ScriptEditor = () => {
                     <Text>Scene {index + 1}</Text>
                   </Tag>
                 </Box>
+
+                {index === activeSceneIndex && (
+                  <Flex position={'absolute'} right="10px">
+                    <BiPencil />
+                    <ScriptParagraphPopover />
+                  </Flex>
+                )}
 
                 <Box>
                   <Flex alignItems={'center'}>
