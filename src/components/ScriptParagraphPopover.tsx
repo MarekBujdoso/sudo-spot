@@ -12,7 +12,11 @@ import {
 import { useRef } from 'react'
 import { BiDotsVerticalRounded } from 'react-icons/bi'
 
-export const ScriptParagraphPopover = () => {
+type Props = {
+  onSceneChange: (changeType: string) => void
+}
+
+export const ScriptParagraphPopover = ({ onSceneChange }: Props) => {
   const { isOpen, onToggle, onClose } = useDisclosure()
   const ref = useRef(null)
 
@@ -20,7 +24,8 @@ export const ScriptParagraphPopover = () => {
     ref: ref,
     handler: onClose,
   })
-  const onSelectOption = () => {
+  const onSelectOption = (changeType: string) => {
+    onSceneChange(changeType)
     onClose()
   }
   return (
@@ -40,7 +45,7 @@ export const ScriptParagraphPopover = () => {
           <Text
             textAlign={'center'}
             width={'100%'}
-            onClick={onSelectOption}
+            onClick={() => onSelectOption('descriptive')}
             mx={0}
             _hover={{
               color: ORANGE,
@@ -51,7 +56,7 @@ export const ScriptParagraphPopover = () => {
           <Text
             textAlign={'center'}
             width={'100%'}
-            onClick={onSelectOption}
+            onClick={() => onSelectOption('superlative')}
             mx={0}
             _hover={{
               color: ORANGE,
@@ -62,7 +67,7 @@ export const ScriptParagraphPopover = () => {
           <Text
             textAlign={'center'}
             width={'100%'}
-            onClick={onSelectOption}
+            onClick={() => onSelectOption('provocative')}
             mx={0}
             _hover={{
               color: ORANGE,
@@ -73,7 +78,7 @@ export const ScriptParagraphPopover = () => {
           <Text
             textAlign={'center'}
             width={'100%'}
-            onClick={onSelectOption}
+            onClick={() => onSelectOption('take-action')}
             mx={0}
             _hover={{
               color: ORANGE,

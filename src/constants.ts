@@ -1,3 +1,6 @@
 export const ORANGE = '#DC7746'
+export const LIGHT_ORANGE = '#ED8936'
 export const BASE_DARK_GREY = '#191C25'
 export const BASE_GREY = '#192533'
+export const GRAY = '#2D3748'
+export const LIGHT_GRAY = '#4A5568'
