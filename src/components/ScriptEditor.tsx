@@ -138,12 +138,13 @@ export const ScriptEditor = ({ onGoBack }: Props) => {
                     ml="1"
                     mt="2"
                     height="30px"
+                    width="80px"
                     mr="8"
                     size={'md'}
                     variant="solid"
                     colorScheme="cyan"
                   >
-                    <Text>Scene {index + 1}</Text>
+                    <Text textAlign={'center'}>Scene {index + 1}</Text>
                   </Tag>
                 </Box>
 
@@ -195,7 +196,6 @@ export const ScriptEditor = ({ onGoBack }: Props) => {
             <Image
               alt="sounds"
               mt="4"
-              height={'300px'}
               borderRadius={'xl'}
               backgroundColor={'#191C24'}
               borderColor={ORANGE}
