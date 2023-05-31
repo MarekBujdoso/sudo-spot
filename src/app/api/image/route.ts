@@ -9,15 +9,16 @@ const openai = new OpenAIApi(configuration)
 
 export async function POST(request: Request) {
   const data = await request.json()
+
   console.log({ data })
   try {
     const response = await openai.createImage({
-      prompt: 'snoop dog eating cheese',
+      prompt: data.prompt,
       n: 1,
-      size: '1024x1024',
+      size: '512x512',
     })
 
-    return NextResponse.json(response.data[0].url)
+    return NextResponse.json(response.data.data[0].url)
   } catch (e) {
     console.error(e)
   }

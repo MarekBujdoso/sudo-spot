@@ -5,82 +5,12 @@ import { BiPencil } from 'react-icons/bi'
 import { ScriptParagraphPopover } from './ScriptParagraphPopover'
 import { BASE_GREY, BASE_DARK_GREY, ORANGE } from '@/constants'
 import { Scene } from '../types'
-import { getChatContent, getScenePrompt } from '../utils'
-
-const SCENES = {
-  scenes: [
-    {
-      location: 'Outdoor sports stadium',
-      music: 'Upbeat and energetic',
-      visuals:
-        'Group of young athletes wearing fitness bands, engaging in various sports activities (running, cycling, playing soccer)',
-      voiceover_tone: 'Energetic and enthusiastic',
-      voiceover_text:
-        'Are you ready to take your athletic performance to the next level?',
-    },
-    {
-      location: 'Gymnasium',
-      music: 'Motivational and inspiring',
-      visuals:
-        'Young athlete wearing a fitness band, focusing intensely during a workout session',
-      voiceover_tone: 'Motivational',
-      voiceover_text:
-        'Introducing the ultimate fitness companion for young athletes: the revolutionary Fitness Band!',
-    },
-    {
-      location: 'Outdoors, scenic view',
-      music: 'Relaxing and soothing',
-      visuals:
-        'Young athlete wearing the fitness band, enjoying a moment of relaxation while overlooking a beautiful landscape',
-      voiceover_tone: 'Calm and soothing',
-      voiceover_text:
-        'With the Fitness Band, you can push your limits during intense workouts and find your peace in moments of tranquility.',
-    },
-    {
-      location: 'Urban setting, city park',
-      music: 'Upbeat and empowering',
-      visuals:
-        'Young athlete wearing the fitness band, tracking their heart rate while running through the park',
-      voiceover_tone: 'Empowering',
-      voiceover_text:
-        'Stay in the zone and maximize your training with real-time heart rate monitoring, step tracking, and advanced fitness analytics.',
-    },
-    {
-      location: 'Indoor sports arena',
-      music: 'Energetic and triumphant',
-      visuals:
-        'Young athlete wearing the fitness band, confidently competing in a sports event, cheered on by a supportive crowd',
-      voiceover_tone: 'Triumphant and excited',
-      voiceover_text:
-        "With the Fitness Band, you'll be unstoppable! Achieve your goals, surpass your limits, and make every moment count.",
-    },
-    {
-      location: 'Indoor sports arena',
-      music: 'Energetic and triumphant',
-      visuals:
-        'Young athlete wearing the fitness band, confidently competing in a sports event, cheered on by a supportive crowd',
-      voiceover_tone: 'Triumphant and excited',
-      voiceover_text:
-        "With the Fitness Band, you'll be unstoppable! Achieve your goals, surpass your limits, and make every moment count.",
-    },
-  ],
-  closing_shot: {
-    location: 'Product showcase',
-    music: 'Upbeat and catchy',
-    visuals:
-      'Fitness band displayed alongside its key features, including heart rate monitoring, step tracking, and sleek design',
-    voiceover_tone: 'Enthusiastic and persuasive',
-    voiceover_text:
-      'Get your Fitness Band today and unlock your athletic potential. Join the young athletes across Slovakia who are already revolutionizing their training routines!',
-  },
-  call_to_action: {
-    on_screen_text: 'Get Your Fitness Band Today',
-    website: 'www.fitnessband.com',
-    voiceover_tone: 'Confident',
-    voiceover_text:
-      'Visit www.fitnessband.com now and start your journey to athletic greatness!',
-  },
-}
+import {
+  getDalleScenePrompt,
+  getChatContent,
+  getDalleImage,
+  getScenePrompt,
+} from '../utils'
 
 type Props = {
   script: { scenes: Array<Scene> }
@@ -99,8 +29,28 @@ export const ScriptEditor = ({
     setIsGenerating(true)
     const prompt = getScenePrompt({ changeType, scene: script.scenes[index] })
     const changedScene = await getChatContent(prompt)
-    onChangeScene(index, changedScene)
+    const dallePrompt = getDalleScenePrompt(changedScene)
+    const sceneImageUrl = await getDalleImage(dallePrompt)
+    onChangeScene(index, { ...changedScene, image: sceneImageUrl })
     setIsGenerating(false)
+    onSetActive(index)
+  }
+
+  const onSetActive = async (index: number) => {
+    if (index === activeSceneIndex && script.scenes[index].image) {
+      return
+    }
+
+    if (script.scenes[index].image) {
+      setActiveSceneIndex(index)
+      return
+    }
+    setIsGenerating(true)
+    const prompt = getDalleScenePrompt(script.scenes[index])
+    const sceneImageUrl = await getDalleImage(prompt)
+    onChangeScene(index, { ...script.scenes[index], image: sceneImageUrl })
+    setIsGenerating(false)
+    setActiveSceneIndex(index)
   }
 
   return (
@@ -132,7 +82,7 @@ export const ScriptEditor = ({
             pb="3"
             pl="4"
             key={item.location}
-            onClick={() => setActiveSceneIndex(index)}
+            onClick={() => onSetActive(index)}
             position={'relative'}
           >
             <Flex>
@@ -200,15 +150,22 @@ export const ScriptEditor = ({
           Preview
         </Text>
         <Box>
-          <Image
-            alt="sounds"
-            mt="4"
-            borderRadius={'xl'}
-            backgroundColor={'#191C24'}
-            borderColor={ORANGE}
-            borderWidth={'2px'}
-            src="https://i.pinimg.com/originals/e6/83/f2/e683f29e5eb2d87da457379948533a08.gif"
-          />
+          {activeSceneIndex !== undefined &&
+          script.scenes[activeSceneIndex].image ? (
+            <Image
+              alt="sounds"
+              mt="4"
+              borderRadius={'xl'}
+              src={script.scenes[activeSceneIndex].image}
+            />
+          ) : (
+            <Image
+              alt="sounds"
+              mt="4"
+              borderRadius={'xl'}
+              src="https://i.pinimg.com/originals/e6/83/f2/e683f29e5eb2d87da457379948533a08.gif"
+            />
+          )}
         </Box>
       </Box>
     </Flex>
