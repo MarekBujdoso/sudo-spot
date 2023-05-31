@@ -11,4 +11,5 @@ export type Scene = {
   visuals: string
   voiceover_tone: string
   voiceover_text: string
+  image?: string
 }
