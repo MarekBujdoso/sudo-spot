@@ -10,7 +10,9 @@ import {
   getChatContent,
   getDalleImage,
   getScenePrompt,
+  getMusicFileName,
 } from '../utils'
+import { TextToSpeech } from '../components/TextToSpeech'
 
 type Props = {
   script: { scenes: Array<Scene> }
@@ -31,10 +33,12 @@ export const ScriptEditor = ({
     const changedScene = await getChatContent(prompt)
     const dallePrompt = getDalleScenePrompt(changedScene)
     const sceneImageUrl = await getDalleImage(dallePrompt)
-    onChangeScene(index, { ...changedScene, image: sceneImageUrl })
+    const audio = getMusicFileName(script.scenes[index].music_type)
+    onChangeScene(index, { ...changedScene, image: sceneImageUrl, audio })
     setIsGenerating(false)
     onSetActive(index)
   }
+  console.log(script)
 
   const onSetActive = async (index: number) => {
     if (index === activeSceneIndex && script.scenes[index].image) {
@@ -48,7 +52,14 @@ export const ScriptEditor = ({
     setIsGenerating(true)
     const prompt = getDalleScenePrompt(script.scenes[index])
     const sceneImageUrl = await getDalleImage(prompt)
-    onChangeScene(index, { ...script.scenes[index], image: sceneImageUrl })
+    const audio =
+      script.scenes[index].audio ||
+      getMusicFileName(script.scenes[index].music_type)
+    onChangeScene(index, {
+      ...script.scenes[index],
+      image: sceneImageUrl,
+      audio,
+    })
     setIsGenerating(false)
     setActiveSceneIndex(index)
   }
@@ -115,7 +126,13 @@ export const ScriptEditor = ({
               <Box>
                 <Flex alignItems={'center'}>
                   <Box cursor={'pointer'} mr="3">
-                    <BsPlayCircle color={ORANGE} />
+                    <TextToSpeech
+                      text={item.voiceover_text}
+                      isImageReady={
+                        index === activeSceneIndex && script.scenes[index].image
+                      }
+                      musicFileName={item.audio}
+                    />
                   </Box>
                   <Text fontSize={'xl'} as="span">
                     {item.location}

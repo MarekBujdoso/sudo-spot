@@ -8,8 +8,10 @@ export type FormValues = {
 export type Scene = {
   location: string
   music: string
+  music_type: string
   visuals: string
   voiceover_tone: string
   voiceover_text: string
   image?: string
+  audio?: string
 }
